@@ -175,7 +175,7 @@ class TSL2561:
                     _b, _ir = self.get_data()
                     # Set a flag to indicate we've adjusted the gain
                     _agcCheck = True
-                elif _b > _hi and _tsl2561Gain == TSL2561_GAIN_16X:
+                elif _b > _hi and self.gain == TSL2561_GAIN_16X:
                     # Drop gain to 1x and try again
                     self.set_gain(TSL2561_GAIN_1X)
                     # Drop the previous conversion results
