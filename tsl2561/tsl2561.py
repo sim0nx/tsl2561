@@ -12,9 +12,10 @@ commit ced9f731da5095988cd66158562c2fde659e0510:
 https://github.com/adafruit/Adafruit_TSL2561
 '''
 
+from __future__ import absolute_import
 import time
 from Adafruit_I2C import Adafruit_I2C
-from constants import *
+from .constants import *  # pylint: disable=unused-wildcard-import
 
 __author__ = 'Georges Toth <georges@trypill.org>'
 __credits__ = ['K.Townsend (Adafruit Industries)']
@@ -28,7 +29,8 @@ v1.0 - First release (previously TSL2561)
 '''
 
 
-class TSL2561:
+class TSL2561(object):
+    '''Driver for the TSL2561 digital luminosity (light) sensors.'''
     def __init__(self, address=None,
                  integration_time=TSL2561_DELAY_INTTIME_402MS,
                  gain=TSL2561_GAIN_1X, autogain=False, debug=False):
@@ -36,6 +38,8 @@ class TSL2561:
             self.address = address
         else:
             self.address = TSL2561_ADDR_FLOAT
+
+        self.i2c = Adafruit_I2C(self.address)
 
         self.debug = debug
         self.integration_time = integration_time
@@ -48,8 +52,6 @@ class TSL2561:
         '''Initializes I2C and configures the sensor (call this function before
         doing anything else)
         '''
-        self.i2c = Adafruit_I2C(self.address)
-
         # Make sure we're actually connected
         x = self.i2c.readU8(TSL2561_REGISTER_ID)
 
@@ -66,13 +68,16 @@ class TSL2561:
 
     def enable(self):
         '''Enable the device by setting the control bit to 0x03'''
-        self.i2c.write8(0x80, 0x03)     # enable the device
+        self.i2c.write8(TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL,
+                        TSL2561_CONTROL_POWERON)
 
     def disable(self):
         '''Disables the device (putting it in lower power sleep mode)'''
-        self.i2c.write8(0x80, 0x00)     # disable the device
+        self.i2c.write8(TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL,
+                        TSL2561_CONTROL_POWEROFF)
 
-    def _delay(self, value):
+    @staticmethod
+    def delay(value):
         '''Delay times must be specified in milliseconds but as the python
         sleep function only takes (float) seconds we need to convert the sleep
         time first
@@ -86,7 +91,7 @@ class TSL2561:
         self.enable()
 
         # Wait x ms for ADC to complete
-        self._delay(self.integration_time)
+        TSL2561.delay(self.integration_time)
 
         # Reads a two byte value from channel 0 (visible + infrared)
         broadband = self.i2c.readU16(TSL2561_COMMAND_BIT | TSL2561_WORD_BIT |
@@ -164,7 +169,7 @@ class TSL2561:
                 _hi = TSL2561_AGC_THI_402MS
                 _lo = TSL2561_AGC_TLO_402MS
 
-            _b, _ir = self.get_data()
+            _b, _ir = self._get_data()
 
             # Run an auto-gain check if we haven't already done so ...
             if not _agcCheck:
@@ -172,14 +177,14 @@ class TSL2561:
                     # Increase the gain and try again
                     self.set_gain(TSL2561_GAIN_16X)
                     # Drop the previous conversion results
-                    _b, _ir = self.get_data()
+                    _b, _ir = self._get_data()
                     # Set a flag to indicate we've adjusted the gain
                     _agcCheck = True
                 elif _b > _hi and self.gain == TSL2561_GAIN_16X:
                     # Drop gain to 1x and try again
                     self.set_gain(TSL2561_GAIN_1X)
                     # Drop the previous conversion results
-                    _b, _ir = self.get_data()
+                    _b, _ir = self._get_data()
                     # Set a flag to indicate we've adjusted the gain
                     _agcCheck = True
                 else:
@@ -204,13 +209,7 @@ class TSL2561:
         '''Converts the raw sensor values to the standard SI lux equivalent.
         Returns 0 if the sensor is saturated and the values are unreliable.
         '''
-        chScale = 0
-        channel1 = 0
-        channel0 = 0
-
         # Make sure the sensor isn't saturated!
-        clipThreshold = 0
-
         if self.integration_time == TSL2561_INTEGRATIONTIME_13MS:
             clipThreshold = TSL2561_CLIPPING_13MS
         elif self.integration_time == TSL2561_INTEGRATIONTIME_101MS:
@@ -222,7 +221,7 @@ class TSL2561:
         if broadband > clipThreshold or ir > clipThreshold:
             raise Exception('Sensor is saturated')
 
-        # Get the correct scale depending on the intergration time
+        # Get the correct scale depending on the integration time
         if self.integration_time == TSL2561_INTEGRATIONTIME_13MS:
             chScale = TSL2561_LUX_CHSCALE_TINT0
         elif self.integration_time == TSL2561_INTEGRATIONTIME_101MS:
@@ -241,7 +240,7 @@ class TSL2561:
         # Find the ratio of the channel values (Channel1/Channel0)
         ratio1 = 0
         if channel0 != 0:
-            ratio1 = (channel1 << (TSL2561_LUX_RATIOSCALE+1)) / channel0
+            ratio1 = (channel1 << (TSL2561_LUX_RATIOSCALE + 1)) / channel0
 
         # round the ratio value
         ratio = (ratio1 + 1) >> 1
@@ -252,36 +251,36 @@ class TSL2561:
         if ratio >= 0 and ratio <= TSL2561_LUX_K1T:
             b = TSL2561_LUX_B1T
             m = TSL2561_LUX_M1T
-        elif (ratio <= TSL2561_LUX_K2T):
+        elif ratio <= TSL2561_LUX_K2T:
             b = TSL2561_LUX_B2T
             m = TSL2561_LUX_M2T
-        elif (ratio <= TSL2561_LUX_K3T):
+        elif ratio <= TSL2561_LUX_K3T:
             b = TSL2561_LUX_B3T
             m = TSL2561_LUX_M3T
-        elif (ratio <= TSL2561_LUX_K4T):
+        elif ratio <= TSL2561_LUX_K4T:
             b = TSL2561_LUX_B4T
             m = TSL2561_LUX_M4T
-        elif (ratio <= TSL2561_LUX_K5T):
+        elif ratio <= TSL2561_LUX_K5T:
             b = TSL2561_LUX_B5T
             m = TSL2561_LUX_M5T
-        elif (ratio <= TSL2561_LUX_K6T):
+        elif ratio <= TSL2561_LUX_K6T:
             b = TSL2561_LUX_B6T
             m = TSL2561_LUX_M6T
-        elif (ratio <= TSL2561_LUX_K7T):
+        elif ratio <= TSL2561_LUX_K7T:
             b = TSL2561_LUX_B7T
             m = TSL2561_LUX_M7T
-        elif (ratio > TSL2561_LUX_K8T):
+        elif ratio > TSL2561_LUX_K8T:
             b = TSL2561_LUX_B8T
             m = TSL2561_LUX_M8T
 
-        temp = ((channel0 * b) - (channel1 * m))
+        temp = (channel0 * b) - (channel1 * m)
 
         # Do not allow negative lux value
         if temp < 0:
             temp = 0
 
         # Round lsb (2^(LUX_SCALE-1))
-        temp += (1 << (TSL2561_LUX_LUXSCALE-1))
+        temp += 1 << (TSL2561_LUX_LUXSCALE - 1)
 
         # Strip off fractional portion
         lux = temp >> TSL2561_LUX_LUXSCALE
