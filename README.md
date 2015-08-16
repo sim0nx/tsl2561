@@ -5,7 +5,7 @@ Python library for TSL2561
 Requirements
 ------------
   - python 2.7.x
-  - Adafruit I2C library (https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/tree/master/Adafruit\_I2C)
+  - Adafruit I2C library (https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/tree/master/Adafruit_I2C)
   - python smbus
 
 Example
