@@ -1,3 +1,6 @@
+[![Code Health](https://landscape.io/github/sim0nx/tsl2561/master/landscape.svg?style=flat)](https://landscape.io/github/sim0nx/tsl2561/master)
+
+
 Python library for TSL2561
 ============
   This is python library for working with Adafruit's TSL2561 luminosity sensor.
