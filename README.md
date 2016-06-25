@@ -8,8 +8,8 @@ Python library for TSL2561
 Requirements
 ------------
   - python 2.7.x
-  - Adafruit I2C library (https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/tree/master/Adafruit_I2C)
-  - python smbus
+  - Adafruit GPIO library (https://github.com/adafruit/Adafruit_Python_GPIO)
+  - Adafruit PureIO library (https://github.com/adafruit/Adafruit_Python_PureIO)
 
 Example
 ------------
@@ -27,7 +27,7 @@ License
 Copyright (c) 2015 Kevin Townsend for Adafruit Industries.
 All rights reserved.
 
-Copyright (c) 2015, Georges Toth
+Copyright (c) 2016, Georges Toth
 All rights reserved.
 
 
