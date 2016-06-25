@@ -1,4 +1,4 @@
-[![Code Health](https://landscape.io/github/sim0nx/tsl2561/master/landscape.svg?style=flat)](https://landscape.io/github/sim0nx/tsl2561/master)
+[![Code Health](https://landscape.io/github/sim0nx/tsl2561/master/landscape.svg?style=flat)](https://landscape.io/github/sim0nx/tsl2561/master) [![PyPI version](https://badge.fury.io/py/tsl2561.svg)](https://badge.fury.io/py/tsl2561)
 
 
 Python library for TSL2561
