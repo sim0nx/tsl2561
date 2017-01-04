@@ -15,14 +15,15 @@ https://github.com/adafruit/Adafruit_TSL2561
 from __future__ import absolute_import
 import time
 from Adafruit_GPIO import I2C
-from constants import *  # pylint: disable=unused-wildcard-import
+from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
 
 __author__ = 'Georges Toth <georges@trypill.org>'
-__credits__ = ['K.Townsend (Adafruit Industries)']
+__credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)']
 __license__ = 'BSD'
-__version__ = 'v2.1'
+__version__ = 'v2.2'
 
 '''HISTORY
+v2.2 - Merge PR #4 regarding wrong use of integration time
 v2.1 - Minor adaptations required by latest Adafruit pyton libraries
 v2.0 - Rewrote driver for Adafruit_Sensor and Auto-Gain support, and
        added lux clipping check (returns 0 lux on sensor saturation)
