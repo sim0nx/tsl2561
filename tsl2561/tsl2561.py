@@ -15,7 +15,7 @@ https://github.com/adafruit/Adafruit_TSL2561
 from __future__ import absolute_import
 import time
 from Adafruit_GPIO import I2C
-from .constants import *  # pylint: disable=unused-wildcard-import
+from constants import *  # pylint: disable=unused-wildcard-import
 
 __author__ = 'Georges Toth <georges@trypill.org>'
 __credits__ = ['K.Townsend (Adafruit Industries)']
@@ -33,7 +33,7 @@ v1.0 - First release (previously TSL2561)
 class TSL2561(object):
     '''Driver for the TSL2561 digital luminosity (light) sensors.'''
     def __init__(self, address=None, busnum=None,
-                 integration_time=TSL2561_DELAY_INTTIME_402MS,
+                 integration_time=TSL2561_INTEGRATIONTIME_402MS,
                  gain=TSL2561_GAIN_1X, autogain=False, debug=False):
         if address is not None:
             self.address = address
@@ -47,6 +47,12 @@ class TSL2561(object):
         self.gain = gain
         self.autogain = autogain
 
+        if self.integration_time == TSL2561_INTEGRATIONTIME_402MS:
+            self.delay_time = TSL2561_DELAY_INTTIME_402MS
+        elif self.integration_time == TSL2561_INTEGRATIONTIME_101MS:
+            self.delay_time = TSL2561_DELAY_INTTIME_101MS
+        elif self.integration_time == TSL2561_INTEGRATIONTIME_13MS:
+            self.delay_time = TSL2561_DELAY_INTTIME_13MS
         self._begin()
 
     def _begin(self):
@@ -92,7 +98,7 @@ class TSL2561(object):
         self.enable()
 
         # Wait x ms for ADC to complete
-        TSL2561.delay(self.integration_time)
+        TSL2561.delay(self.delay_time)
 
         # Reads a two byte value from channel 0 (visible + infrared)
         broadband = self.i2c.readU16(TSL2561_COMMAND_BIT | TSL2561_WORD_BIT |
