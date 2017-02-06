@@ -11,6 +11,13 @@ Requirements
   - Adafruit GPIO library (https://github.com/adafruit/Adafruit_Python_GPIO)
   - Adafruit PureIO library (https://github.com/adafruit/Adafruit_Python_PureIO)
 
+Installation
+------------
+  ```
+  pip install tsl2561
+  ```
+
+
 Example
 ------------
   ```python
