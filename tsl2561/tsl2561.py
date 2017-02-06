@@ -18,11 +18,12 @@ from Adafruit_GPIO import I2C
 from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
 
 __author__ = 'Georges Toth <georges@trypill.org>'
-__credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)']
+__credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)', 'Simon Gansen (theFork)']
 __license__ = 'BSD'
-__version__ = 'v2.2'
+__version__ = 'v3.0'
 
 '''HISTORY
+v3.0 - Port to Python 3.x
 v2.2 - Merge PR #4 regarding wrong use of integration time
 v2.1 - Minor adaptations required by latest Adafruit pyton libraries
 v2.0 - Rewrote driver for Adafruit_Sensor and Auto-Gain support, and
@@ -36,10 +37,14 @@ class TSL2561(object):
     def __init__(self, address=None, busnum=None,
                  integration_time=TSL2561_INTEGRATIONTIME_402MS,
                  gain=TSL2561_GAIN_1X, autogain=False, debug=False):
+
+        # Set default address and bus number if not given
         if address is not None:
             self.address = address
         else:
             self.address = TSL2561_ADDR_FLOAT
+        if busnum == None:
+            self.busnum = 1
 
         self.i2c = I2C.get_i2c_device(self.address, busnum=busnum)
 
@@ -251,7 +256,7 @@ class TSL2561(object):
             ratio1 = (channel1 << (TSL2561_LUX_RATIOSCALE + 1)) / channel0
 
         # round the ratio value
-        ratio = (ratio1 + 1) >> 1
+        ratio = (int(ratio1) + 1) >> 1
 
         b = 0
         m = 0
@@ -296,14 +301,14 @@ class TSL2561(object):
         # Signal I2C had no errors
         return lux
 
+
     def lux(self):
         '''Read sensor data, convert it to LUX and return it'''
         broadband, ir = self._get_luminosity()
-
         return self._calculate_lux(broadband, ir)
 
 
 if __name__ == "__main__":
     tsl = TSL2561(debug=True)
 
-    print tsl.lux()
+    print(tsl.lux())

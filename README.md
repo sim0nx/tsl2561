@@ -7,7 +7,7 @@ Python library for TSL2561
 
 Requirements
 ------------
-  - python 2.7.x
+  - Python 2.7 or Python 3.x
   - Adafruit GPIO library (https://github.com/adafruit/Adafruit_Python_GPIO)
   - Adafruit PureIO library (https://github.com/adafruit/Adafruit_Python_PureIO)
 
@@ -19,7 +19,7 @@ Example
 
   if __name__ == "__main__":
     tsl = TSL2561(debug=1)
-    print tsl.lux()
+    print(tsl.lux())
   ```
 
 License
