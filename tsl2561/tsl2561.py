@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from future import absolute_import, division, print_function, unicode_literals
 '''Driver for the TSL2561 digital luminosity (light) sensors.
 
 Pick one up at http://www.adafruit.com/products/439
@@ -43,7 +44,7 @@ class TSL2561(object):
             self.address = address
         else:
             self.address = TSL2561_ADDR_FLOAT
-        if busnum == None:
+        if busnum is None:
             self.busnum = 1
 
         self.i2c = I2C.get_i2c_device(self.address, busnum=busnum)
@@ -300,7 +301,6 @@ class TSL2561(object):
 
         # Signal I2C had no errors
         return lux
-
 
     def lux(self):
         '''Read sensor data, convert it to LUX and return it'''
