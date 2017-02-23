@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-from future import absolute_import, division, print_function, unicode_literals
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
 '''Driver for the TSL2561 digital luminosity (light) sensors.
 
 Pick one up at http://www.adafruit.com/products/439
@@ -13,7 +14,6 @@ commit ced9f731da5095988cd66158562c2fde659e0510:
 https://github.com/adafruit/Adafruit_TSL2561
 '''
 
-from __future__ import absolute_import
 import time
 from Adafruit_GPIO import I2C
 from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
@@ -24,6 +24,7 @@ __license__ = 'BSD'
 __version__ = 'v3.0'
 
 '''HISTORY
+v3.1 - Fix import
 v3.0 - Port to Python 3.x
 v2.2 - Merge PR #4 regarding wrong use of integration time
 v2.1 - Minor adaptations required by latest Adafruit pyton libraries
