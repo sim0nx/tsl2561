@@ -1,8 +1,14 @@
-[![Code Health](https://landscape.io/github/sim0nx/tsl2561/master/landscape.svg?style=flat)](https://landscape.io/github/sim0nx/tsl2561/master) [![PyPI version](https://badge.fury.io/py/tsl2561.svg)](https://badge.fury.io/py/tsl2561)
+.. image:: https://landscape.io/github/sim0nx/tsl2561/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/sim0nx/tsl2561/master
+   :alt: Code Health
+
+.. image:: https://badge.fury.io/py/tsl2561.svg
+   :target: https://badge.fury.io/py/tsl2561
+   :alt: PyPI version
 
 
 Python library for TSL2561
-============
+==========================
   This is python library for working with Adafruit's TSL2561 luminosity sensor.
 
 Requirements
@@ -13,28 +19,31 @@ Requirements
 
 Installation
 ------------
-  ```
+Install the latest version using pip:
+
+.. code-block:: bash
+
   pip install tsl2561
-  ```
 
 
 Example
-------------
-  ```python
+-------
+
+.. code-block:: python
+
   from tsl2561 import TSL2561
 
 
   if __name__ == "__main__":
     tsl = TSL2561(debug=1)
     print(tsl.lux())
-  ```
 
 License
-============
+=======
 Copyright (c) 2015 Kevin Townsend for Adafruit Industries.
 All rights reserved.
 
-Copyright (c) 2016, Georges Toth
+Copyright (c) 2016-present, Georges Toth
 All rights reserved.
 
 
