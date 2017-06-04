@@ -4,11 +4,11 @@ from setuptools import setup, find_packages
 import sys
 import os
 
-VERSION = (3, 1)
+VERSION = (3, 2)
 __version__ = VERSION
 __versionstr__ = '.'.join(map(str, VERSION))
 
-f = open(join(dirname(__file__), 'README.md'))
+f = open(join(dirname(__file__), 'README.rst'))
 long_description = f.read().strip()
 f.close()
 
@@ -31,13 +31,12 @@ setup(
     ),
     keywords = ['TSL2561'],
     classifiers = [
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: BSD License",
         "Intended Audience :: Developers",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: Implementation :: CPython",
     ],
     install_requires=install_requires,
 )

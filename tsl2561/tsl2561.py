@@ -21,9 +21,10 @@ from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
 __author__ = 'Georges Toth <georges@trypill.org>'
 __credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)', 'Simon Gansen (theFork)']
 __license__ = 'BSD'
-__version__ = 'v3.0'
+__version__ = 'v3.2'
 
 '''HISTORY
+v3.2 - Cleanup readme, setup.py
 v3.1 - Fix import
 v3.0 - Port to Python 3.x
 v2.2 - Merge PR #4 regarding wrong use of integration time
