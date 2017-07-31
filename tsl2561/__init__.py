@@ -1,1 +1,1 @@
-from tsl2561 import *
+from .tsl2561 import *

@@ -35,7 +35,7 @@ Example
 
 
   if __name__ == "__main__":
-    tsl = TSL2561(debug=1)
+    tsl = TSL2561(debug=True)
     print(tsl.lux())
 
 License

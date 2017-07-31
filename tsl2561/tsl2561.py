@@ -1,7 +1,12 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
-'''Driver for the TSL2561 digital luminosity (light) sensors.
+
+import time
+from Adafruit_GPIO import I2C
+from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
+
+
+"""Driver for the TSL2561 digital luminosity (light) sensors.
 
 Pick one up at http://www.adafruit.com/products/439
 
@@ -12,18 +17,15 @@ products from Adafruit!
 Code ported from Adafruit Arduino library,
 commit ced9f731da5095988cd66158562c2fde659e0510:
 https://github.com/adafruit/Adafruit_TSL2561
-'''
-
-import time
-from Adafruit_GPIO import I2C
-from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
+"""
 
 __author__ = 'Georges Toth <georges@trypill.org>'
 __credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)', 'Simon Gansen (theFork)']
 __license__ = 'BSD'
 __version__ = 'v3.2'
 
-'''HISTORY
+"""HISTORY
+v3.3 - Fix import bug in PY3
 v3.2 - Cleanup readme, setup.py
 v3.1 - Fix import
 v3.0 - Port to Python 3.x
@@ -32,7 +34,7 @@ v2.1 - Minor adaptations required by latest Adafruit pyton libraries
 v2.0 - Rewrote driver for Adafruit_Sensor and Auto-Gain support, and
        added lux clipping check (returns 0 lux on sensor saturation)
 v1.0 - First release (previously TSL2561)
-'''
+"""
 
 
 class TSL2561(object):
@@ -308,9 +310,3 @@ class TSL2561(object):
         '''Read sensor data, convert it to LUX and return it'''
         broadband, ir = self._get_luminosity()
         return self._calculate_lux(broadband, ir)
-
-
-if __name__ == "__main__":
-    tsl = TSL2561(debug=True)
-
-    print(tsl.lux())
