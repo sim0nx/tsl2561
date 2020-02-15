@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
-
-import time
-from Adafruit_GPIO import I2C
-from tsl2561.constants import *  # pylint: disable=unused-wildcard-import
-
 
 """Driver for the TSL2561 digital luminosity (light) sensors.
 
@@ -19,12 +13,20 @@ commit ced9f731da5095988cd66158562c2fde659e0510:
 https://github.com/adafruit/Adafruit_TSL2561
 """
 
+import time
+import typing
+
+from Adafruit_GPIO import I2C
+
+from tsl2561.constants import *  # pylint: disable=unused-wildcard-import,wildcard-import
+
 __author__ = 'Georges Toth <georges@trypill.org>'
-__credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)', 'Simon Gansen (theFork)']
+__credits__ = ['K.Townsend (Adafruit Industries)', 'Yongwen Zhuang (zYeoman)', 'miko (mikostn)',
+               'Simon Gansen (theFork)']
 __license__ = 'BSD'
-__version__ = 'v3.2'
 
 """HISTORY
+v3.4.0 - Make Python 3 only
 v3.3 - Fix import bug in PY3
 v3.2 - Cleanup readme, setup.py
 v3.1 - Fix import
@@ -37,17 +39,19 @@ v1.0 - First release (previously TSL2561)
 """
 
 
-class TSL2561(object):
-    '''Driver for the TSL2561 digital luminosity (light) sensors.'''
-    def __init__(self, address=None, busnum=None,
-                 integration_time=TSL2561_INTEGRATIONTIME_402MS,
-                 gain=TSL2561_GAIN_1X, autogain=False, debug=False):
+class TSL2561:
+    """Driver for the TSL2561 digital luminosity (light) sensors."""
+
+    def __init__(self, address: typing.Optional[int] = None, busnum: typing.Optional[int] = None,
+                 integration_time: int = TSL2561_INTEGRATIONTIME_402MS,
+                 gain: int = TSL2561_GAIN_1X, autogain: bool = False, debug: bool = False) -> None:
 
         # Set default address and bus number if not given
         if address is not None:
             self.address = address
         else:
             self.address = TSL2561_ADDR_FLOAT
+
         if busnum is None:
             self.busnum = 1
 
@@ -64,12 +68,13 @@ class TSL2561(object):
             self.delay_time = TSL2561_DELAY_INTTIME_101MS
         elif self.integration_time == TSL2561_INTEGRATIONTIME_13MS:
             self.delay_time = TSL2561_DELAY_INTTIME_13MS
+
         self._begin()
 
-    def _begin(self):
-        '''Initializes I2C and configures the sensor (call this function before
+    def _begin(self) -> None:
+        """Initializes I2C and configures the sensor (call this function before
         doing anything else)
-        '''
+        """
         # Make sure we're actually connected
         x = self.i2c.readU8(TSL2561_REGISTER_ID)
 
@@ -84,26 +89,26 @@ class TSL2561(object):
         # Note: by default, the device is in power down mode on bootup
         self.disable()
 
-    def enable(self):
-        '''Enable the device by setting the control bit to 0x03'''
+    def enable(self) -> None:
+        """Enable the device by setting the control bit to 0x03"""
         self.i2c.write8(TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL,
                         TSL2561_CONTROL_POWERON)
 
-    def disable(self):
-        '''Disables the device (putting it in lower power sleep mode)'''
+    def disable(self) -> None:
+        """Disables the device (putting it in lower power sleep mode)"""
         self.i2c.write8(TSL2561_COMMAND_BIT | TSL2561_REGISTER_CONTROL,
                         TSL2561_CONTROL_POWEROFF)
 
     @staticmethod
-    def delay(value):
-        '''Delay times must be specified in milliseconds but as the python
+    def delay(value: int) -> None:
+        """Delay times must be specified in milliseconds but as the python
         sleep function only takes (float) seconds we need to convert the sleep
         time first
-        '''
+        """
         time.sleep(value / 1000.0)
 
-    def _get_data(self):
-        '''Private function to read luminosity on both channels'''
+    def _get_data(self) -> typing.Tuple[int, int]:
+        """Private function to read luminosity on both channels"""
 
         # Enable the device by setting the control bit to 0x03
         self.enable()
@@ -124,8 +129,8 @@ class TSL2561(object):
 
         return (broadband, ir)
 
-    def set_integration_time(self, integration_time):
-        '''Sets the integration time for the TSL2561'''
+    def set_integration_time(self, integration_time: int) -> None:
+        """Sets the integration time for the TSL2561"""
 
         # Enable the device by setting the control bit to 0x03
         self.enable()
@@ -139,9 +144,9 @@ class TSL2561(object):
         # Turn the device off to save power
         self.disable()
 
-    def set_gain(self, gain):
-        '''Adjusts the gain on the TSL2561 (adjusts the sensitivity to light)
-        '''
+    def set_gain(self, gain: int) -> None:
+        """Adjusts the gain on the TSL2561 (adjusts the sensitivity to light)
+        """
 
         # Enable the device by setting the control bit to 0x03
         self.enable()
@@ -155,16 +160,16 @@ class TSL2561(object):
         # Turn the device off to save power
         self.disable()
 
-    def set_auto_range(self, value):
-        '''Enables or disables the auto-gain settings when reading
+    def set_auto_range(self, value: bool) -> None:
+        """Enables or disables the auto-gain settings when reading
         data from the sensor
-        '''
+        """
         self.autogain = value
 
-    def _get_luminosity(self):
-        '''Gets the broadband (mixed lighting) and IR only values from
+    def _get_luminosity(self) -> typing.Tuple[int, int]:
+        """Gets the broadband (mixed lighting) and IR only values from
         the TSL2561, adjusting gain if auto-gain is enabled
-        '''
+        """
         valid = False
 
         # If Auto gain disabled get a single reading and continue
@@ -223,10 +228,10 @@ class TSL2561(object):
 
         return (broadband, ir)
 
-    def _calculate_lux(self, broadband, ir):
-        '''Converts the raw sensor values to the standard SI lux equivalent.
+    def _calculate_lux(self, broadband: int, ir: int) -> int:
+        """Converts the raw sensor values to the standard SI lux equivalent.
         Returns 0 if the sensor is saturated and the values are unreliable.
-        '''
+        """
         # Make sure the sensor isn't saturated!
         if self.integration_time == TSL2561_INTEGRATIONTIME_13MS:
             clipThreshold = TSL2561_CLIPPING_13MS
@@ -258,7 +263,7 @@ class TSL2561(object):
         # Find the ratio of the channel values (Channel1/Channel0)
         ratio1 = 0
         if channel0 != 0:
-            ratio1 = (channel1 << (TSL2561_LUX_RATIOSCALE + 1)) / channel0
+            ratio1 = (channel1 << (TSL2561_LUX_RATIOSCALE + 1)) // channel0
 
         # round the ratio value
         ratio = (int(ratio1) + 1) >> 1
@@ -306,7 +311,7 @@ class TSL2561(object):
         # Signal I2C had no errors
         return lux
 
-    def lux(self):
-        '''Read sensor data, convert it to LUX and return it'''
+    def lux(self) -> int:
+        """Read sensor data, convert it to LUX and return it"""
         broadband, ir = self._get_luminosity()
         return self._calculate_lux(broadband, ir)

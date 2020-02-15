@@ -1,42 +1,34 @@
 # -*- coding: utf-8 -*-
 from os.path import join, dirname
-from setuptools import setup, find_packages
-import sys
-import os
 
-VERSION = (3, 3)
-__version__ = VERSION
-__versionstr__ = '.'.join(map(str, VERSION))
+import setuptools
 
-f = open(join(dirname(__file__), 'README.rst'))
-long_description = f.read().strip()
-f.close()
+with open(join(dirname(__file__), 'README.rst')) as fhdl:
+    long_description = fhdl.read().strip()
 
-install_requires = [
-]
-
-
-setup(
-    name = 'tsl2561',
-    description = "Driver for the TSL2561 digital luminosity (light) sensors",
-    license = "BSD",
-    url = "https://github.com/sim0nx/tsl2561",
-    download_url = "https://github.com/sim0nx/tsl2561",
-    long_description = long_description,
-    version = __versionstr__,
-    author = "Georges Toth",
-    author_email = "georges@trypill.org",
-    packages = find_packages(
-        where='.',
-    ),
-    keywords = ['TSL2561'],
-    classifiers = [
+setuptools.setup(
+    name='tsl2561',
+    description="Driver for the TSL2561 digital luminosity (light) sensors",
+    license="BSD",
+    url="https://github.com/sim0nx/tsl2561",
+    download_url="https://github.com/sim0nx/tsl2561",
+    long_description=long_description,
+    version='3.4.0',
+    author="Georges Toth",
+    author_email="georges@trypill.org",
+    packages=setuptools.find_packages(),
+    install_requires=['Adafruit_GPIO'],
+    package_data={'tsl2561': ['py.typed']},
+    zip_safe=False,
+    python_requires='>=3.5',
+    keywords=['TSL2561'],
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: BSD License",
         "Intended Audience :: Developers",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 2.7",
+        'Programming Language :: Python',
         "Programming Language :: Python :: 3",
-    ],
-    install_requires=install_requires,
+        'Programming Language :: Python :: 3 :: Only',
+    ]
 )

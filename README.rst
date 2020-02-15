@@ -1,7 +1,3 @@
-.. image:: https://landscape.io/github/sim0nx/tsl2561/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/sim0nx/tsl2561/master
-   :alt: Code Health
-
 .. image:: https://badge.fury.io/py/tsl2561.svg
    :target: https://badge.fury.io/py/tsl2561
    :alt: PyPI version
@@ -13,9 +9,8 @@ Python library for TSL2561
 
 Requirements
 ------------
-  - Python 2.7 or Python 3.x
+  - Python >=3.5
   - Adafruit GPIO library (https://github.com/adafruit/Adafruit_Python_GPIO)
-  - Adafruit PureIO library (https://github.com/adafruit/Adafruit_Python_PureIO)
 
 Installation
 ------------
